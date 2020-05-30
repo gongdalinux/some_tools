@@ -1,0 +1,143 @@
+//install sougoupinyin
+https://blog.csdn.net/gsh_hello_world/article/details/80404430
+
+在PC端i7-7800X执行sudo ./NVIDIA-Linux-x86_64-396.18.run -no-x-check -no-nouveau-check -no-opengl-files 时 Graphics:llvmpipe(LLVM 6.0, 256 bits), 去掉-no-opengl-files 显示Graphics:GeForce GTX 1080 Ti/PCIe/SSE2
+//卸载cuda
+cd /usr/local/cuda-9.2/bin
+sudo ./uninstall_cuda_9.2.pl
+//卸载NVIDIA Driver
+sudo apt-get autoremove --purge nvidia*
+
+//安装NVIDIA Driver
+local install refer https://blog.csdn.net/lihe4151021/article/details/90083431
+/*sudo add-apt-repository ppa:graphics-drivers/ppa
+sudo apt-get update
+sudo apt-get install nvidia-396*/
+
+//查看版本信息
+nvidia-smi 
+
+//安装cuda9.2版本
+sudo apt-get install freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libgl1-mesa-glx libglu1
+sudo apt-get install -f
+
+sudo sh cuda_9.2.148_396.37_linux.run
+
+//设置cuda环境变量
+export PATH=/usr/local/cuda-9.2/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-9.2/lib64:$LD_LIBRARY_PATH
+
+//检查CUDA是否安装成功
+cd /usr/local/cuda-9.2/samples/1_Utilities/deviceQuery  
+sudo make  
+./deviceQuery  
+
+//安装cudnn
+//下载cudnn
+https://developer.nvidia.com/rdp/cudnn-archive
+
+tar -zxvf cudnn-7.1.4-linux-x64-v6.0.tgz 
+sudo cp cuda/include/cudnn.h /usr/local/cuda/include/ 
+sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64/ -d
+
+sudo chmod a+r /usr/local/cuda/include/cudnn.h 
+sudo chmod a+r /usr/local/cuda/lib64/libcudnn*
+
+ #======更新软连接======
+cd /usr/local/cuda/lib64/ 
+sudo rm -rf libcudnn.so libcudnn.so.7   #删除原有动态文件，版本号注意变化，可在cudnn的lib64文件夹中查看   
+sudo ln -s libcudnn.so.7.0.2 libcudnn.so.7  #生成软衔接（注意这里要和自己下载的cudnn版本对应，可以在/usr/local/cuda/lib64下查看自己libcudnn的版本）
+sudo ln -s libcudnn.so.7 libcudnn.so #生成软链接
+sudo ldconfig -v #立刻生效
+
+//install nccl
+https://docs.nvidia.com/deeplearning/sdk/nccl-install-guide/index.html
+nccl test:
+$ git clone https://github.com/NVIDIA/nccl-tests.git
+$ cd nccl-tests
+$ make
+$ ./build/all_reduce_perf -b 8 -e 256M -f 2 -g <ngpus>
+
+//安装anaconda5.3
+bash Anaconda3-5.3.0-Linux-x86_64.sh
+export PATH=/home/ubuntu/anaconda3/bin:$PATH
+
+//安装TF cuda9.0 cudnn7.1 py2.7
+conda install --channel https://conda.anaconda.org/anaconda tensorflow-gpu=1.8.0 
+//安装pytorch
+conda install pytorch torchvision cuda92 -c pytorch
+
+//若安装失败
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+#conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+#conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+#conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/pro/ 
+(optional)conda config --set show_channel_urls yes
+https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/直接下
+conda install --offline ./pytorch.bz2
+
+//从清华镜像源安装numpy
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple numpy
+
+//测试pytorch
+https://pytorch.org/get-started/locally/
+
+//anaconda repository
+https://repo.anaconda.com/pkgs
+
+//基于 python3.6 创建一个名为test_py3 的环境
+conda create --name test_py3 python=3.6 
+http://bendfunction.f3322.net:666/share/
+//基于 python2.7 创建一个名为test_py2 的环境
+conda create --name test_py2 python=2.7
+
+environment location: /home/ml/anaconda3/envs/test_py3
+
+//激活 test 环境
+source activate test_py2 # linux/mac
+
+//切换到python3
+activate test_py3
+
+//退出test环境
+source deactivate
+
+//删除虚拟环境
+conda remove -n your_env_name(虚拟环境名称) --all
+
+//删除环境中的某个包
+conda remove --name your_env_name  package_name 
+
+
+//安装cuda9.0版本的TF12.0  在conda5.1 py3.6环境下
+pip install virtualenv
+pip install virutalenvwrapper
+virtualenv --system-site-packages -p python3 ./venv
+
+source ./venv/bin/activate
+(venv) pip install --upgrade pip
+(venv) pip list
+(venv) pip install tensorflow_gpu-1.12.0-cp36-cp36m-linux_x86_64.whl                   
+
+(venv) deactivate  //退出
+//删除虚拟环境
+rm -rf venv 
+
+//国内数据集下载地址
+http://bendfunction.f3322.net:666/share/
+
+//oh-my-zsh install
+sudo apt-get update
+sudo apt-get install zsh git-core
+sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+
+//mosh install
+sudo add-apt-repository ppa:keithw/mosh-dev
+sudo apt-get update
+sudo apt-get install mosh
+sudo add-apt-repository --remove ppa:keithw/mosh-dev
+
+//tmux install
+sudo apt-get install tmux
+cp tmux/tmux.conf ~/.tmux.conf
